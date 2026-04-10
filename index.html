@@ -40,14 +40,13 @@ h1 {
   align-items: center;
 }
 
-/* layout rows ONLY (không đụng card) */
 .row {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
 }
 
-/* ===== GIỮ NGUYÊN HIỆU ỨNG ===== */
+/* ===== CARD (GIỮ NGUYÊN) ===== */
 .card {
   width: 240px;
   margin: 15px;
@@ -63,7 +62,7 @@ h1 {
 
 .card:hover {
   transform: scale(1.07) translateY(-3px);
-  animation: none;
+  animation: none; /* FIX hover */
 }
 
 .name {
@@ -99,27 +98,6 @@ h1 {
   animation: glow 1.5s infinite alternate;
 }
 
-@keyframes glow {
-  from { box-shadow: 0 0 5px gold; }
-  to { box-shadow: 0 0 15px gold; }
-}
-@keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-3px); }
-  100% { transform: translateY(0px); }
-}
-
-.guild-founder { box-shadow: 0 0 25px red, inset 0 0 10px rgba(255,0,0,0.5); }
-.guild-master { box-shadow: 0 0 25px gold; }
-.guild-assistance { box-shadow: 0 0 20px orange; }
-.battle-master { box-shadow: 0 0 20px violet; }
-.guild-member { opacity: 0.9; }
-
-.stat {
-  margin-top: 6px;
-  font-family: Arial, sans-serif;
-  font-size: 14px;
-}
 /* ===== SLOGAN BUBBLE ===== */
 .slogan {
   position: absolute;
@@ -131,7 +109,8 @@ h1 {
   padding: 8px 12px;
   border-radius: 8px;
   font-size: 12px;
-  white-space: nowrap;
+  max-width: 220px;
+  text-align: center;
   opacity: 0;
   pointer-events: none;
   transition: 0.3s;
@@ -148,11 +127,33 @@ h1 {
   border: 6px solid transparent;
   border-top-color: rgba(0,0,0,0.9);
 }
-.card:hover .slogan{
+
+.card:hover .slogan {
   opacity: 1;
   transform: translateX(-50%) translateY(-5px);
 }
 
+@keyframes glow {
+  from { box-shadow: 0 0 5px gold; }
+  to { box-shadow: 0 0 15px gold; }
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-3px); }
+  100% { transform: translateY(0px); }
+}
+
+.guild-founder { box-shadow: 0 0 25px red inset; }
+.guild-master { box-shadow: 0 0 25px gold; }
+.guild-assistance { box-shadow: 0 0 20px orange; }
+.battle-master { box-shadow: 0 0 20px violet; }
+
+.stat {
+  margin-top: 6px;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+}
 </style>
 </head>
 
@@ -192,8 +193,8 @@ fetch(CSV_URL)
       title: r[2]?.trim(),
       arkar: Number(r[11]) || 0,
       cs: Number(r[12]) || 0,
-      total: Number(r[14]) || 0
-	  slogan: r[15]?.trim() || ""
+      total: Number(r[14]) || 0,
+      slogan: r[15]?.trim() || "" // 👈 slogan column
     }));
 
   members.sort((a,b)=>b.total-a.total);
@@ -219,24 +220,16 @@ function render(){
   }
 }
 
-/* ===== VIEW CONTRIBUTION ===== */
 function renderContribution(container){
-
-  // Top 1
   container.appendChild(makeRow([members[0]], true));
-
-  // Top 2-3
   container.appendChild(makeRow(members.slice(1,3)));
 
-  // Others (3 per row)
   for(let i=3;i<members.length;i+=3){
     container.appendChild(makeRow(members.slice(i,i+3)));
   }
 }
 
-/* ===== VIEW ROLES ===== */
 function renderRoles(container){
-
   const get = role => members.filter(m => m.title.toLowerCase() === role);
 
   container.appendChild(makeRow(get("guild master")));
@@ -257,7 +250,6 @@ function renderRoles(container){
   }
 }
 
-/* ===== UTIL ===== */
 function makeRow(list, isTop=false){
   const row = document.createElement("div");
   row.className = "row";
@@ -271,18 +263,16 @@ function makeRow(list, isTop=false){
 }
 
 function createCard(m, index=0, isTop1=false){
-
   const div = document.createElement("div");
   let roleClass = m.title.toLowerCase().replaceAll(" ", "-");
 
   let badge = "";
   if(currentView === "contribution" && isTop1){
-    badge = `<div class="badge">🏆 Top</div>`;
+    badge = `<div class="badge">🏆 Top Contributor</div>`;
   }
 
-  // chỉ tạo slogan nếu có dữ liệu
   let sloganHTML = "";
-  if (m.slogan && m.slogan !== "") {
+  if (m.slogan) {
     sloganHTML = `<div class="slogan">"${m.slogan}"</div>`;
   }
 
@@ -296,7 +286,7 @@ function createCard(m, index=0, isTop1=false){
     <div>${m.class} - Lv ${m.level}</div>
     <div class="title">${m.title}</div>
 
-    <div class="stat"><img class="icon" src="https://img.icons8.com/?size=100&id=bJclkWKA0ENc&format=png&color=FFD700"> Arkar War: ${m.arkar}</div>
+       <div class="stat"><img class="icon" src="https://img.icons8.com/?size=100&id=bJclkWKA0ENc&format=png&color=FFD700"> Arkar War: ${m.arkar}</div>
     <div class="stat"><img class="icon" src="https://img.icons8.com/?size=100&id=92096&format=png&color=FFD700"/>Castle Siege: ${m.cs}</div>
     <div class="stat">🎯 Total Joined Events: ${m.total}</div>
   `;
