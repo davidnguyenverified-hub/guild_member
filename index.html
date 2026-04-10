@@ -154,6 +154,45 @@ h1 {
   font-family: Arial, sans-serif;
   font-size: 14px;
 }
+  .cta {
+  margin-top: 50px;
+  padding: 60px 20px;
+  text-align: center;
+  background: radial-gradient(circle at center, #111, #000);
+  border-top: 1px solid rgba(255,215,0,0.2);
+}
+
+.cta-text {
+  font-size: 28px;
+  color: #ffd54f;
+  font-weight: bold;
+  line-height: 1.5;
+}
+
+.cta-text .highlight {
+  color: red;
+  font-style: italic;
+  text-shadow: 0 0 10px red;
+}
+
+.cta-btn {
+  margin-top: 25px;
+  padding: 12px 28px;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  background: linear-gradient(45deg, #cc0000, #ff0000);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 0 15px rgba(255,0,0,0.6);
+  transition: 0.3s;
+}
+
+.cta-btn:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 25px red;
+}
 </style>
 </head>
 
@@ -170,7 +209,14 @@ h1 {
 </div>
 
 <div id="guild"></div>
+<div class="cta">
+  <div class="cta-text">
+    Get ready for adventure and face all enemies ?<br>
+    Become a <span class="highlight">Warlordian!</span>
+  </div>
 
+  <button class="cta-btn" src="https://www.ydalir.top/join-us">Apply Now</button>
+</div>
 <script>
 const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSLv4UPaEHdOZ_9n3W0DsR-Uj_FHVGC3mVRz4efxnB_JJ25mcRDqKc5kLvWEWCrDagxJYBdejgtQGbI/pub?gid=0&single=true&output=csv";
 
